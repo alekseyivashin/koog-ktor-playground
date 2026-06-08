@@ -3,4 +3,8 @@ ktor:
     port: 8080
   application:
     modules:
-      - com.aivashin.RoutingKt.configureRouting
+      - com.aivashin.routing.AgentRoutingKt.agentRouting
+
+agents:
+  api:
+    geminiApiKey: $GEMINI_API_KEY

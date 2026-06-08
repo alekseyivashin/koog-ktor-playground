@@ -1,10 +1,17 @@
 [versions]
 kotlin = "2.3.21"
 logback = "1.5.34"
+koog = "1.0.0"
+koog-beta = "1.0.0-beta"
 
 [libraries]
+# Logs
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+
+# Koog
+koog-agents = { module = "ai.koog:koog-agents", version.ref = "koog" }
+koog-agents-additions = { module = "ai.koog:koog-agents-additions", version.ref = "koog-beta" }
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
-kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
