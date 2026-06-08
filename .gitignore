@@ -1,0 +1,24 @@
+# Gradle
+.gradle/
+build/
+
+# Kotlin / JVM
+.kotlin/
+out/
+*.class
+
+# IntelliJ IDEA
+.idea/
+*.iml
+
+# Logs
+*.log
+
+# Local environment
+.env
+local.properties
+
+# OS files
+Thumbs.db
+.DS_Store
+
