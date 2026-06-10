@@ -19,6 +19,7 @@ dependencies {
     implementation(ktorLibs.server.core)
     implementation(ktorLibs.server.netty)
     implementation(ktorLibs.server.contentNegotiation)
+    implementation(ktorLibs.server.di)
     implementation(ktorLibs.serialization.kotlinx.json)
     implementation(libs.logback.classic)
     implementation(libs.koog.agents)
