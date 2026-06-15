@@ -1,0 +1,23 @@
+meta {
+  name: LLM Chat
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://127.0.0.1:8080/llm/chat
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "sessionId": "db-session",
+    "message": "What tables do we have in our DB?"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

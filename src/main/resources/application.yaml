@@ -5,6 +5,11 @@ ktor:
     modules:
       - com.aivashin.configuration.AgentModuleKt.agentModule
 
+database:
+  url: jdbc:postgresql://localhost:5432/ktor-koog-playground
+  user: postgres
+  password: postgres
+
 agents:
   api:
     geminiApiKey: $GEMINI_API_KEY

@@ -1,16 +1,27 @@
 [versions]
 kotlin = "2.3.21"
 logback = "1.5.34"
+kotlin-logging = "8.0.4"
 koog = "1.0.0"
 koog-beta = "1.0.0-beta"
+postgresql = "42.7.10"
+hikari = "6.2.1"
 
 [libraries]
 # Logs
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+kotlin-logging = { module = "io.github.oshai:kotlin-logging-jvm", version.ref = "kotlin-logging" }
 
 # Koog
 koog-agents = { module = "ai.koog:koog-agents", version.ref = "koog" }
 koog-agents-additions = { module = "ai.koog:koog-agents-additions", version.ref = "koog-beta" }
+koog-agents-features-sql = { module = "ai.koog:agents-features-sql", version.ref = "koog" }
+koog-agents-features-chat-memory-jdbc = { module = "ai.koog:agents-features-chat-memory-sql", version.ref = "koog" }
+koog-agents-features-chat-history-jdbc = { module = "ai.koog:agents-features-chat-history-jdbc", version.ref = "koog" }
+
+# DB
+postgresql = { module = "org.postgresql:postgresql", version.ref = "postgresql" }
+hikari = { module = "com.zaxxer:HikariCP", version.ref = "hikari" }
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
