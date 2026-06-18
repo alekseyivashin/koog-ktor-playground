@@ -13,3 +13,5 @@ database:
 agents:
   api:
     geminiApiKey: $GEMINI_API_KEY
+  mcp:
+    tavilyApiKey: $TAVILY_API_KEY
