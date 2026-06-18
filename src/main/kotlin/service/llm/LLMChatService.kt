@@ -17,7 +17,9 @@ import kotlinx.serialization.json.jsonPrimitive
 
 class LLMChatService(
     @Property("agents.api.geminiApiKey") private val apiKey: String,
-    private val chatHistoryRepository: ChatHistoryRepository
+    private val chatHistoryRepository: ChatHistoryRepository,
+    private val listDatabaseTablesTool: ListDatabaseTablesTool,
+    private val getTableSchemaTool: GetTableSchemaTool,
 ) {
 
     private val MODEL = GoogleModels.Gemini2_5FlashLite
@@ -49,7 +51,7 @@ class LLMChatService(
                 user(userMessage)
             },
             model = MODEL,
-            tools = listOf(ListDatabaseTablesTool.descriptor, GetTableSchemaTool.descriptor),
+            tools = listOf(listDatabaseTablesTool.descriptor, getTableSchemaTool.descriptor),
         )
 
         // Phase 2: Check if the model decided to call a function
@@ -58,12 +60,12 @@ class LLMChatService(
             val call = functionCalls.first()
             val toolResult = when (call.tool) {
                 "list_database_tables" -> {
-                    ListDatabaseTablesTool.execute(Unit)
+                    listDatabaseTablesTool.execute(Unit)
                 }
                 "get_table_schema" -> {
                     // Extract arguments from JSON payload
                     val tableName = call.argsJson["tableName"]?.jsonPrimitive?.content ?: ""
-                    GetTableSchemaTool.execute(GetTableSchemaTool.Args(tableName))
+                    getTableSchemaTool.execute(GetTableSchemaTool.Args(tableName))
                 }
                 else -> "Unknown tool called."
             }

@@ -17,6 +17,8 @@ import io.ktor.server.plugins.di.annotations.Property
 class AgentChatService(
     @Property("agents.api.geminiApiKey") private val apiKey: String,
     private val agentChatHistoryProvider: ChatHistoryProvider,
+    private val listDatabaseTablesTool: ListDatabaseTablesTool,
+    private val getTableSchemaTool: GetTableSchemaTool,
 ) {
 
     private val logger = KotlinLogging.logger {}
@@ -32,8 +34,8 @@ class AgentChatService(
                 Answer briefly, technically accurately and with a touch of professional humor.
             """.trimIndent(),
         toolRegistry = ToolRegistry {
-            tool(ListDatabaseTablesTool)
-            tool(GetTableSchemaTool)
+            tool(listDatabaseTablesTool)
+            tool(getTableSchemaTool)
         },
         temperature = 0.7,
     ) {

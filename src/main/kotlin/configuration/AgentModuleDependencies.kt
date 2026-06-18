@@ -6,6 +6,8 @@ import com.aivashin.repository.ChatHistoryRepository
 import com.aivashin.repository.InMemoryChatHistoryRepository
 import com.aivashin.service.agent.AgentChatService
 import com.aivashin.service.llm.LLMChatService
+import com.aivashin.tool.GetTableSchemaTool
+import com.aivashin.tool.ListDatabaseTablesTool
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import io.ktor.server.application.Application
@@ -20,6 +22,7 @@ fun Application.agentModuleDependencies() {
         provide<DataSource>(::provideDatasource).also {
             require(it.key)
         }
+
         provide<SQLChatHistoryProvider> {
             PostgresJdbcChatHistoryProvider(
                 dataSource = resolve<DataSource>(),
@@ -32,6 +35,9 @@ fun Application.agentModuleDependencies() {
         }
 
         provide<ChatHistoryRepository>(::InMemoryChatHistoryRepository)
+
+        provide<ListDatabaseTablesTool> { ListDatabaseTablesTool(resolve<DataSource>()) }
+        provide<GetTableSchemaTool> { GetTableSchemaTool(resolve<DataSource>()) }
 
         provide<LLMChatService>(::LLMChatService)
         provide<AgentChatService>(::AgentChatService)
