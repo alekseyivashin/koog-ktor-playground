@@ -48,12 +48,3 @@ fun Application.agentRouting() {
         }
     }
 }
-
-@Serializable
-data class ChatRequest(
-    val sessionId: String,
-    val message: String
-)
-
-@Serializable
-data class ChatResponse(val reply: String)

@@ -9,13 +9,14 @@ import ai.koog.prompt.executor.clients.google.GoogleModels
 import ai.koog.prompt.executor.llms.all.simpleGoogleAIExecutor
 import ai.koog.prompt.message.Message
 import com.aivashin.configuration.dependency.COMMON_TOOL_REGISTRY_NAME
+import com.aivashin.configuration.dependency.DatabaseDependencies.AGENT_CHAT_HISTORY_PROVIDER_NAME
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.server.plugins.di.annotations.Named
 import io.ktor.server.plugins.di.annotations.Property
 
 class AgentChatService(
     @Property("agents.api.geminiApiKey") private val apiKey: String,
-    private val agentChatHistoryProvider: ChatHistoryProvider,
+    @Named(AGENT_CHAT_HISTORY_PROVIDER_NAME) private val agentChatHistoryProvider: ChatHistoryProvider,
     @Named(COMMON_TOOL_REGISTRY_NAME) private val toolRegistry: ToolRegistry,
 ) {
 

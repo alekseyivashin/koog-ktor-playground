@@ -9,7 +9,9 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.server.plugins.di.DependencyRegistry
 import javax.sql.DataSource
 
-const val COMMON_TOOL_REGISTRY_NAME = "commonToolRegistry"
+object ToolsDependencies {
+    const val COMMON_TOOL_REGISTRY_NAME = "commonToolRegistry"
+}
 
 fun DependencyRegistry.toolsDependencies() {
 

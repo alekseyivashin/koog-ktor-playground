@@ -2,6 +2,7 @@ package com.aivashin.configuration
 
 import com.aivashin.configuration.dependency.agentModuleDependencies
 import com.aivashin.routing.agentRouting
+import com.aivashin.routing.optimizerRouting
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
@@ -13,4 +14,5 @@ fun Application.agentModule() {
     }
     agentModuleDependencies()
     agentRouting()
+    optimizerRouting()
 }
