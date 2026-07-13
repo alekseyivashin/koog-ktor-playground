@@ -34,7 +34,7 @@ val securityGuardNode by node<OptimizerState, OptimizerState> { ctx ->
         }
         val isSafe = requestLLMStructured<SecurityGuardStructuredResponse>().map { it.data.isSafe }.getOrElse {
             logger.error(it) { "Security guardrail check failed for session ${ctx.sessionId}" }
-            throw it
+            return@writeSession ctx.copy(systemErrors = ctx.systemErrors + "Security guardrail check failed: ${it.message}")
         }
         return@writeSession ctx.copy(isSafe = isSafe)
     }
@@ -42,6 +42,7 @@ val securityGuardNode by node<OptimizerState, OptimizerState> { ctx ->
 
 // Node 2: Extract specific table names involved in the problem
 val queryAnalyzerNode by node<OptimizerState, OptimizerState> { ctx ->
+    if (ctx.systemErrors.isNotEmpty()) return@node ctx
     llm.writeSession {
         appendPrompt {
             system(
@@ -68,7 +69,7 @@ val queryAnalyzerNode by node<OptimizerState, OptimizerState> { ctx ->
         }
         val response = requestLLMStructured<QueryAnalyzerStructuredResponse>().map { it.data }.getOrElse {
             logger.error(it) { "Query analyzer failed for session ${ctx.sessionId}" }
-            throw it
+            return@writeSession ctx.copy(systemErrors = ctx.systemErrors + "Query analyzer failed: ${it.message}")
         }
         return@writeSession ctx.copy(tableNamesInQuery = response.tableNames, isWebSearchNeeded = response.isWebSearchNeeded)
     }
@@ -76,6 +77,7 @@ val queryAnalyzerNode by node<OptimizerState, OptimizerState> { ctx ->
 
 // Node 3: Aggregate contexts in parallel (Live JDBC + Web Search)
 val contextAggregatorNode by node<OptimizerState, OptimizerState> { ctx ->
+    if (ctx.systemErrors.isNotEmpty()) return@node ctx
     llm.writeSession {
         withContext(Dispatchers.IO) {
             // Parallel branch A: Fetch structural schemas from Postgres via our local tool
@@ -116,6 +118,7 @@ val contextAggregatorNode by node<OptimizerState, OptimizerState> { ctx ->
 
 // Node 4: Generate SQL solution based on aggregated live data
 val solutionArchitectNode by node<OptimizerState, OptimizerState> { ctx ->
+    if (ctx.systemErrors.isNotEmpty()) return@node ctx
     llm.writeSession {
         appendPrompt {
             system(
@@ -138,7 +141,7 @@ val solutionArchitectNode by node<OptimizerState, OptimizerState> { ctx ->
         }
         val response = requestLLMStructured<SolutionArchitectStructuredResponse>().map { it.data }.getOrElse {
             logger.error(it) { "Solution architect failed for session ${ctx.sessionId}" }
-            throw it
+            return@writeSession ctx.copy(systemErrors = ctx.systemErrors + "Solution architect failed: ${it.message}")
         }
         return@writeSession ctx.copy(
             generatedRawSql = response.generatedRawSql.ifEmpty { "/* No SQL generated */" },
@@ -150,6 +153,7 @@ val solutionArchitectNode by node<OptimizerState, OptimizerState> { ctx ->
 
 // Node 5: Self-Reflection / Audit Loop
 val selfReflectionNode by node<OptimizerState, OptimizerState> { ctx ->
+    if (ctx.systemErrors.isNotEmpty()) return@node ctx
     llm.writeSession {
         appendPrompt {
             system(
@@ -169,7 +173,7 @@ val selfReflectionNode by node<OptimizerState, OptimizerState> { ctx ->
         }
         val response = requestLLMStructured<SelfReflectionStructuredResponse>().map { it.data }.getOrElse {
             logger.error(it) { "Self-reflection failed for session ${ctx.sessionId}" }
-            throw it
+            return@writeSession ctx.copy(systemErrors = ctx.systemErrors + "Self-reflection failed: ${it.message}")
         }
         return@writeSession ctx.copy(
             validationErrors = response.validationErrors.takeIf { response.isDangerous } ?: emptyList(),
@@ -179,12 +183,23 @@ val selfReflectionNode by node<OptimizerState, OptimizerState> { ctx ->
 
 // Fallback node for security violations
 val rejectNode by node<OptimizerState, OptimizerState> { ctx ->
+    if (ctx.systemErrors.isNotEmpty()) return@node ctx
     ctx.copy(explanation = "Access Denied: The query triggered automated security guardrails due to destructive command detection.")
 }
 
 // Mapping final state to String output for Ktor router
 val finishNode by node<OptimizerState, String> { ctx ->
-    """
+    if (ctx.systemErrors.isNotEmpty()) {
+        return@node """
+            |### Optimization Process Interrupted
+            |
+            |**Reason:** Upstream AI Model Providers are currently unavailable or rate limits are exhausted.
+            |**Details:** ${ctx.systemErrors.joinToString()}
+            |
+            |Please retry your request in a few minutes.
+        """.trimMargin()
+    }
+    return@node """
                     |### Verification Status: ${if (ctx.validationErrors.isEmpty()) "SUCCESS (Verified after ${ctx.iterationCount} iterations)" else "MAX_RETRIES_REACHED"}
                     |
                     |### Optimized SQL:

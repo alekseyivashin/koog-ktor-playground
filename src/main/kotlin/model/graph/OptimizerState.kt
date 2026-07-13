@@ -14,5 +14,6 @@ data class OptimizerState(
     val explanation: String = "",
     val isSafe: Boolean = true,
     val validationErrors: List<String> = emptyList(),
+    val systemErrors: List<String> = emptyList(),
     val iterationCount: Int = 0
 )

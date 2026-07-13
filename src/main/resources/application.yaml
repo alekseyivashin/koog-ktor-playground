@@ -15,3 +15,10 @@ agents:
     geminiApiKey: $GEMINI_API_KEY
   mcp:
     tavilyApiKey: $TAVILY_API_KEY
+  optimizer:
+    retry:
+      maxAttempts: 5
+      initialDelaySeconds: 1
+      maxDelaySeconds: 30
+      backoffMultiplier: 2.0
+
