@@ -1,3 +1,7 @@
+service:
+  name: ktor-koog-playground
+  version: 0.0.1
+
 ktor:
   deployment:
     port: 8080
@@ -21,4 +25,9 @@ agents:
       initialDelaySeconds: 1
       maxDelaySeconds: 30
       backoffMultiplier: 2.0
-
+  telemetry:
+    console:
+      enabled: true
+    jaeger:
+      enabled: true
+      endpoint: http://localhost:4317

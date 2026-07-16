@@ -7,7 +7,6 @@ import ai.koog.serialization.kotlinx.toKoogJSONObject
 import com.aivashin.tool.GetTableSchemaTool
 import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.CompletableDeferred
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -16,7 +15,6 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
-import kotlin.text.ifEmpty
 
 private val logger = KotlinLogging.logger {}
 

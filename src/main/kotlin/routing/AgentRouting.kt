@@ -12,7 +12,6 @@ import io.ktor.server.routing.post
 import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
 import io.ktor.utils.io.writeString
-import kotlinx.serialization.Serializable
 
 fun Application.agentRouting() {
 

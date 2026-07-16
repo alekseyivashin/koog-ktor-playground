@@ -6,6 +6,7 @@ koog = "1.0.0"
 koog-beta = "1.0.0-beta"
 postgresql = "42.7.10"
 hikari = "6.2.1"
+opentelemetry = "1.61.0"
 
 [libraries]
 # Logs
@@ -22,6 +23,10 @@ koog-agents-features-chat-history-jdbc = { module = "ai.koog:agents-features-cha
 # DB
 postgresql = { module = "org.postgresql:postgresql", version.ref = "postgresql" }
 hikari = { module = "com.zaxxer:HikariCP", version.ref = "hikari" }
+
+# Telemetry
+opentelemetry-exporter-logging = { module = "io.opentelemetry:opentelemetry-exporter-logging", version.ref = "opentelemetry" }
+opentelemetry-exporter-otlp = { module = "io.opentelemetry:opentelemetry-exporter-otlp", version.ref = "opentelemetry" }
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }

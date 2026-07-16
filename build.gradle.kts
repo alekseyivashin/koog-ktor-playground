@@ -30,6 +30,8 @@ dependencies {
     implementation(libs.koog.agents.features.chat.memory.jdbc)
     implementation(libs.postgresql)
     implementation(libs.hikari)
+    implementation(libs.opentelemetry.exporter.logging)
+    implementation(libs.opentelemetry.exporter.otlp)
 
     testImplementation(kotlin("test"))
     testImplementation(ktorLibs.server.testHost)

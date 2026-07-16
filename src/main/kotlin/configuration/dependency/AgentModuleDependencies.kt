@@ -1,5 +1,7 @@
 package com.aivashin.configuration.dependency
 
+import com.aivashin.configuration.properties.ServiceProperties
+import com.aivashin.configuration.telemetry.TelemetryConfig
 import com.aivashin.service.agent.AgentChatService
 import com.aivashin.service.graph.DatabaseOptimizerGraphService
 import com.aivashin.service.llm.LLMChatService
@@ -12,6 +14,10 @@ fun Application.agentModuleDependencies() {
 
         toolsDependencies()
         databaseDependencies()
+
+        provide<ServiceProperties> { resolveProperty("service") }
+
+        provide<TelemetryConfig>(::TelemetryConfig)
 
         provide<LLMChatService>(::LLMChatService)
         provide<AgentChatService>(::AgentChatService)
