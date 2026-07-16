@@ -27,7 +27,7 @@ agents:
       backoffMultiplier: 2.0
   telemetry:
     console:
-      enabled: true
+      enabled: false
     jaeger:
       enabled: true
       endpoint: http://localhost:4317

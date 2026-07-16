@@ -7,6 +7,8 @@ import ai.koog.agents.core.dsl.builder.strategy
 import ai.koog.agents.core.tools.ToolRegistry
 import ai.koog.agents.features.eventHandler.feature.handleEvents
 import ai.koog.agents.features.opentelemetry.feature.OpenTelemetry
+import ai.koog.agents.features.tracing.feature.Tracing
+import ai.koog.agents.features.tracing.writer.TraceFeatureMessageLogWriter
 import ai.koog.prompt.executor.clients.google.GoogleLLMClient
 import ai.koog.prompt.executor.clients.google.GoogleModels
 import ai.koog.prompt.executor.clients.retry.RetryConfig
@@ -103,19 +105,8 @@ class DatabaseOptimizerGraphService(
             windowSize(100)
         }
         install(OpenTelemetry, telemetryConfig::invoke)
-        handleEvents {
-            onNodeExecutionStarting {
-                logger.info { "Node ${it.node.name} execution starting with input: ${it.input}" }
-            }
-            onNodeExecutionCompleted {
-                logger.info { "Node ${it.node.name} execution completed with output: ${it.output}" }
-            }
-            onLLMCallCompleted {
-                logger.info { "LLM call completed. Response: ${it.response}" }
-            }
-            onToolCallCompleted {
-                logger.info { "Tool call completed: $it" }
-            }
+        install(Tracing) {
+            addMessageProcessor(TraceFeatureMessageLogWriter(logger))
         }
     }
 
