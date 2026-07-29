@@ -26,8 +26,9 @@ agents:
       maxDelaySeconds: 30
       backoffMultiplier: 2.0
   telemetry:
+    verbose: true
     console:
-      enabled: false
+      enabled: true
     jaeger:
       enabled: true
       endpoint: http://localhost:4317

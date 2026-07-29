@@ -5,7 +5,6 @@ import ai.koog.agents.chatMemory.feature.ChatMemory
 import ai.koog.agents.core.agent.AIAgent
 import ai.koog.agents.core.dsl.builder.strategy
 import ai.koog.agents.core.tools.ToolRegistry
-import ai.koog.agents.features.eventHandler.feature.handleEvents
 import ai.koog.agents.features.opentelemetry.feature.OpenTelemetry
 import ai.koog.agents.features.tracing.feature.Tracing
 import ai.koog.agents.features.tracing.writer.TraceFeatureMessageLogWriter
@@ -86,12 +85,11 @@ class DatabaseOptimizerGraphService(
         )
     )
 
-    // Dedicated agent for web research via Tavily (contained in the common registry)
     private val researchAgent = AIAgent(
         promptExecutor = PromptExecutor.builder()
             .addClient(client)
             .build(),
-        llmModel = GoogleModels.Gemini2_5Flash,
+        llmModel = GoogleModels.Gemini3_1FlashLite,
         systemPrompt = """
             You are a senior database research assistant specializing in PostgreSQL performance optimization.
             Your job is to help investigate database performance issues, indexing strategies, 

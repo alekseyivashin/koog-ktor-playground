@@ -10,6 +10,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class TelemetryProperties(
+    val verbose: Boolean = false,
     val console: ConsoleTelemetry,
     val jaeger: JaegerTelemetry,
 ) {
@@ -32,6 +33,7 @@ class TelemetryConfig(
 ) {
     operator fun invoke(config: OpenTelemetryConfig) {
         config.setServiceInfo(serviceProperties.name, serviceProperties.version)
+        config.setVerbose(telemetryProperties.verbose)
 
         if (telemetryProperties.console.enabled) {
             config.addSpanExporter(LoggingSpanExporter.create())
