@@ -7,9 +7,9 @@ koog-beta = "1.1.1-beta"
 postgresql = "42.7.10"
 hikari = "6.2.1"
 opentelemetry = "1.61.0"
-mockk = "1.13.16"
-kotest = "5.9.1"
-testcontainers = "1.20.5"
+mockk = "1.14.11"
+kotest = "6.2.2"
+testcontainers = "2.0.5"
 
 [libraries]
 # Logs
@@ -35,8 +35,8 @@ opentelemetry-exporter-otlp = { module = "io.opentelemetry:opentelemetry-exporte
 # Testing
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 kotest-assertions-core = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
-testcontainers-postgresql = { module = "org.testcontainers:postgresql", version.ref = "testcontainers" }
-testcontainers-junit-jupiter = { module = "org.testcontainers:junit-jupiter", version.ref = "testcontainers" }
+testcontainers-postgresql = { module = "org.testcontainers:testcontainers-postgresql", version.ref = "testcontainers" }
+testcontainers-junit-jupiter = { module = "org.testcontainers:testcontainers-junit-jupiter", version.ref = "testcontainers" }
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }

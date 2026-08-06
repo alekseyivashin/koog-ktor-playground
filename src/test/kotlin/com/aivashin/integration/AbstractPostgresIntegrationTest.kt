@@ -4,13 +4,13 @@ import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
-import org.testcontainers.containers.PostgreSQLContainer
+import org.testcontainers.postgresql.PostgreSQLContainer
 import javax.sql.DataSource
 
 abstract class AbstractPostgresIntegrationTest {
 
     companion object {
-        @JvmStatic protected var container: PostgreSQLContainer<*>? = null
+        @JvmStatic protected var container: PostgreSQLContainer? = null
         @JvmStatic protected lateinit var dataSource: HikariDataSource
         @JvmStatic protected var jdbcUrl: String = ""
         @JvmStatic protected var dbUser: String = ""
