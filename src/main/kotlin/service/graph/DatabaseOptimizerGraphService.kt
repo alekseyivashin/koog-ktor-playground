@@ -3,7 +3,6 @@ package com.aivashin.service.graph
 import ai.koog.agents.chatMemory.feature.ChatHistoryProvider
 import ai.koog.agents.chatMemory.feature.ChatMemory
 import ai.koog.agents.core.agent.AIAgent
-import ai.koog.agents.core.dsl.builder.strategy
 import ai.koog.agents.core.tools.ToolRegistry
 import ai.koog.agents.features.opentelemetry.feature.OpenTelemetry
 import ai.koog.agents.features.tracing.feature.Tracing
@@ -17,17 +16,11 @@ import com.aivashin.configuration.dependency.COMMON_TOOL_REGISTRY_NAME
 import com.aivashin.configuration.dependency.DatabaseDependencies.DATABASE_OPTIMIZER_HISTORY_PROVIDER_NAME
 import com.aivashin.configuration.telemetry.TelemetryConfig
 import com.aivashin.model.graph.OptimizerState
-import com.aivashin.model.graph.contextAggregatorNode
-import com.aivashin.model.graph.finishNode
-import com.aivashin.model.graph.queryAnalyzerNode
-import com.aivashin.model.graph.rejectNode
-import com.aivashin.model.graph.securityGuardNode
-import com.aivashin.model.graph.selfReflectionNode
-import com.aivashin.model.graph.solutionArchitectNode
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.server.plugins.di.annotations.Named
 import io.ktor.server.plugins.di.annotations.Property
 import kotlinx.serialization.Serializable
+import optimizerStrategy
 import kotlin.time.Duration.Companion.seconds
 
 @Serializable
@@ -48,34 +41,7 @@ class DatabaseOptimizerGraphService(
 
     private val logger = KotlinLogging.logger {}
 
-    // Building the core declarative Koog Strategy Graph
-    private val optimizerStrategy = strategy<OptimizerState, String>("db-optimization-pipeline") {
-
-        // --- Topology and Routing Transitions ---
-        edge(nodeStart forwardTo securityGuardNode)
-
-        edge(securityGuardNode forwardTo queryAnalyzerNode onCondition { it.isSafe })
-        edge(securityGuardNode forwardTo rejectNode onCondition { it.isSafe.not() })
-
-        edge(queryAnalyzerNode forwardTo contextAggregatorNode)
-        edge(contextAggregatorNode forwardTo solutionArchitectNode)
-        edge(solutionArchitectNode forwardTo selfReflectionNode)
-
-        // The Self-Correction Loop edge
-        edge(selfReflectionNode forwardTo solutionArchitectNode onCondition {
-            it.validationErrors.isNotEmpty() && it.iterationCount < 3
-        })
-
-        // Safe exit edge
-        edge(selfReflectionNode forwardTo finishNode onCondition {
-            it.validationErrors.isEmpty() || it.iterationCount >= 3
-        })
-
-        edge(rejectNode forwardTo finishNode)
-        edge(finishNode forwardTo nodeFinish)
-    }
-
-    val client = RetryingLLMClient(
+    private val client = RetryingLLMClient(
         delegate = GoogleLLMClient(apiKey),
         config = RetryConfig(
             maxAttempts = optimizerRetryConfig.maxAttempts,

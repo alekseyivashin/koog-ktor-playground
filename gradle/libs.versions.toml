@@ -7,6 +7,9 @@ koog-beta = "1.1.1-beta"
 postgresql = "42.7.10"
 hikari = "6.2.1"
 opentelemetry = "1.61.0"
+mockk = "1.13.16"
+kotest = "5.9.1"
+testcontainers = "1.20.5"
 
 [libraries]
 # Logs
@@ -19,6 +22,7 @@ koog-agents-additions = { module = "ai.koog:koog-agents-additions", version.ref 
 koog-agents-features-sql = { module = "ai.koog:agents-features-sql", version.ref = "koog" }
 koog-agents-features-chat-memory-jdbc = { module = "ai.koog:agents-features-chat-memory-sql", version.ref = "koog" }
 koog-agents-features-chat-history-jdbc = { module = "ai.koog:agents-features-chat-history-jdbc", version.ref = "koog" }
+koog-agents-test = { module = "ai.koog:agents-test", version.ref = "koog" }
 
 # DB
 postgresql = { module = "org.postgresql:postgresql", version.ref = "postgresql" }
@@ -28,6 +32,13 @@ hikari = { module = "com.zaxxer:HikariCP", version.ref = "hikari" }
 opentelemetry-exporter-logging = { module = "io.opentelemetry:opentelemetry-exporter-logging", version.ref = "opentelemetry" }
 opentelemetry-exporter-otlp = { module = "io.opentelemetry:opentelemetry-exporter-otlp", version.ref = "opentelemetry" }
 
+# Testing
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+kotest-assertions-core = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
+testcontainers-postgresql = { module = "org.testcontainers:postgresql", version.ref = "testcontainers" }
+testcontainers-junit-jupiter = { module = "org.testcontainers:junit-jupiter", version.ref = "testcontainers" }
+
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+

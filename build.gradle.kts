@@ -35,4 +35,15 @@ dependencies {
 
     testImplementation(kotlin("test"))
     testImplementation(ktorLibs.server.testHost)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotest.assertions.core)
+    testImplementation(libs.testcontainers.postgresql)
+    testImplementation(libs.testcontainers.junit.jupiter)
+    testImplementation(libs.koog.agents.test)
+    testImplementation("com.h2database:h2:2.3.232")
 }
+
+tasks.test {
+    useJUnitPlatform()
+}
+
