@@ -14,6 +14,7 @@ application {
 kotlin {
     jvmToolchain(21)
 }
+
 dependencies {
     implementation(platform(libs.kotlinx.coroutines.bom))
     implementation(libs.kotlinx.coroutines.reactor)
@@ -45,10 +46,10 @@ dependencies {
     testImplementation(libs.testcontainers.postgresql)
     testImplementation(libs.testcontainers.junit.jupiter)
     testImplementation(libs.koog.agents.test)
-    testImplementation("com.h2database:h2:2.3.232")
+    testImplementation(libs.h2)
+    testImplementation(libs.r2dbc.h2)
 }
 
 tasks.test {
     useJUnitPlatform()
 }
-

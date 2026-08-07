@@ -2,6 +2,9 @@ package com.aivashin.integration
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
+import io.r2dbc.spi.ConnectionFactories
+import io.r2dbc.spi.ConnectionFactory
+import io.r2dbc.spi.ConnectionFactoryOptions
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.testcontainers.postgresql.PostgreSQLContainer
@@ -12,6 +15,7 @@ abstract class AbstractPostgresIntegrationTest {
     companion object {
         @JvmStatic protected var container: PostgreSQLContainer? = null
         @JvmStatic protected lateinit var dataSource: HikariDataSource
+        @JvmStatic protected lateinit var connectionFactory: ConnectionFactory
         @JvmStatic protected var jdbcUrl: String = ""
         @JvmStatic protected var dbUser: String = ""
         @JvmStatic protected var dbPass: String = ""
@@ -19,6 +23,7 @@ abstract class AbstractPostgresIntegrationTest {
         @JvmStatic
         @BeforeAll
         fun setupBaseDatabase() {
+            var isPostgresContainer = false
             try {
                 val postgres = PostgreSQLContainer("postgres:16-alpine").apply {
                     withDatabaseName("testdb")
@@ -30,6 +35,7 @@ abstract class AbstractPostgresIntegrationTest {
                 jdbcUrl = postgres.jdbcUrl
                 dbUser = postgres.username
                 dbPass = postgres.password
+                isPostgresContainer = true
             } catch (_: Exception) {
                 // Fallback to in-memory PostgreSQL mode if Docker is unavailable
                 jdbcUrl = "jdbc:h2:mem:testdb;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH"
@@ -44,6 +50,27 @@ abstract class AbstractPostgresIntegrationTest {
                 this.maximumPoolSize = 5
             }
             dataSource = HikariDataSource(config)
+
+            if (isPostgresContainer && container != null) {
+                val options = ConnectionFactoryOptions.builder()
+                    .option(ConnectionFactoryOptions.DRIVER, "postgresql")
+                    .option(ConnectionFactoryOptions.HOST, container!!.host)
+                    .option(ConnectionFactoryOptions.PORT, container!!.getMappedPort(5432))
+                    .option(ConnectionFactoryOptions.DATABASE, container!!.databaseName)
+                    .option(ConnectionFactoryOptions.USER, container!!.username)
+                    .option(ConnectionFactoryOptions.PASSWORD, container!!.password)
+                    .build()
+                connectionFactory = ConnectionFactories.get(options)
+            } else {
+                val options = ConnectionFactoryOptions.builder()
+                    .option(ConnectionFactoryOptions.DRIVER, "h2")
+                    .option(ConnectionFactoryOptions.PROTOCOL, "mem")
+                    .option(ConnectionFactoryOptions.DATABASE, "testdb;DB_CLOSE_DELAY=-1;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH")
+                    .option(ConnectionFactoryOptions.USER, "sa")
+                    .option(ConnectionFactoryOptions.PASSWORD, "")
+                    .build()
+                connectionFactory = ConnectionFactories.get(options)
+            }
 
             seedDatabaseSchema(dataSource)
         }

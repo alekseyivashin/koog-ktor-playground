@@ -1,17 +1,15 @@
 package com.aivashin.web
 
-import ai.koog.agents.chatMemory.feature.ChatHistoryProvider
-import ai.koog.prompt.executor.clients.google.GoogleLLMClient
-import ai.koog.prompt.message.Message
-import ai.koog.prompt.message.ResponseMetaInfo
-import ai.koog.prompt.streaming.StreamFrame
-import ai.koog.utils.time.KoogClock
-import com.aivashin.configuration.dependency.DatabaseDependencies.AGENT_CHAT_HISTORY_PROVIDER_NAME
-import com.aivashin.configuration.dependency.DatabaseDependencies.DATABASE_OPTIMIZER_HISTORY_PROVIDER_NAME
 import com.aivashin.routing.ChatRequest
 import com.aivashin.routing.ChatResponse
+import com.aivashin.routing.agentRouting
+import com.aivashin.routing.optimizerRouting
+import com.aivashin.service.agent.AgentChatService
+import com.aivashin.service.graph.DatabaseOptimizerGraphService
+import com.aivashin.service.llm.LLMChatService
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.string.shouldNotBeBlank
 import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.get
@@ -21,79 +19,52 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
+import io.ktor.server.application.install
 import io.ktor.server.config.ApplicationConfig
+import io.ktor.server.plugins.contentnegotiation.ContentNegotiation as ServerContentNegotiation
 import io.ktor.server.plugins.di.dependencies
+import io.ktor.server.plugins.di.provide
 import io.ktor.server.testing.ApplicationTestBuilder
 import io.ktor.server.testing.testApplication
 import io.mockk.coEvery
 import io.mockk.mockk
-import io.mockk.mockkConstructor
-import io.mockk.unmockkAll
 import kotlinx.coroutines.flow.flowOf
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertDoesNotThrow
+import java.util.UUID
 
 /**
  * Web-facing HTTP API tests for all Ktor endpoints using Ktor's [testApplication] engine.
  *
- * Configuration is loaded directly from classpath resource `application-test.yaml` without
- * needing a PostgreSQL Testcontainer or external Docker environment.
+ * Tests routing, status codes, content negotiation, payload validation, and streaming.
  */
 class RoutesWebTest {
-
-    @BeforeEach
-    fun setUp() {
-        mockkConstructor(GoogleLLMClient::class)
-
-        val universalJsonReply = """{
-            "reply": "Mocked LLM Response",
-            "isSafe": true,
-            "tableNames": ["users"],
-            "isWebSearchNeeded": false,
-            "generatedRawSql": "CREATE INDEX idx_users_email ON users(email);",
-            "explanation": "Add index for faster lookups",
-            "isDangerous": false,
-            "validationErrors": []
-        }""".trimIndent()
-
-        val mockAssistantMessage = Message.Assistant(
-            content = universalJsonReply,
-            metaInfo = ResponseMetaInfo.create(KoogClock.System)
-        )
-
-        coEvery {
-            anyConstructed<GoogleLLMClient>().execute(any(), any(), any())
-        } returns mockAssistantMessage
-
-        coEvery {
-            anyConstructed<GoogleLLMClient>().execute(any(), any())
-        } returns mockAssistantMessage
-
-        val mockFrame = mockk<StreamFrame>(relaxed = true)
-        coEvery {
-            anyConstructed<GoogleLLMClient>().executeStreaming(any(), any(), any())
-        } returns flowOf(mockFrame)
-
-        coEvery {
-            anyConstructed<GoogleLLMClient>().executeStreaming(any(), any())
-        } returns flowOf(mockFrame)
-    }
-
-    @AfterEach
-    fun tearDown() {
-        unmockkAll()
-    }
 
     private fun runWebTest(block: suspend ApplicationTestBuilder.() -> Unit) = testApplication {
         environment { config = ApplicationConfig("application-test.yaml") }
         application {
+            install(ServerContentNegotiation) { json() }
+
+            val mockLlmService = mockk<LLMChatService>()
+            coEvery { mockLlmService.askLLM(any(), any()) } returns "Mocked LLM Response"
+            coEvery { mockLlmService.streamLLM(any(), any()) } returns flowOf("Mocked LLM Response")
+
+            val mockAgentService = mockk<AgentChatService>()
+            coEvery { mockAgentService.askAgent(any(), any()) } returns "Mocked LLM Response"
+
+            val mockOptimizerService = mockk<DatabaseOptimizerGraphService>()
+            coEvery { mockOptimizerService.runOptimization(any(), any()) } returns "CREATE INDEX idx_users_email ON users(email);"
+
             dependencies {
-                provide<ChatHistoryProvider>(AGENT_CHAT_HISTORY_PROVIDER_NAME) { mockk(relaxed = true) }
-                provide<ChatHistoryProvider>(DATABASE_OPTIMIZER_HISTORY_PROVIDER_NAME) { mockk(relaxed = true) }
+                provide<LLMChatService> { mockLlmService }
+                provide<AgentChatService> { mockAgentService }
+                provide<DatabaseOptimizerGraphService> { mockOptimizerService }
             }
+
+            agentRouting()
+            optimizerRouting()
         }
         block()
     }
@@ -107,20 +78,40 @@ class RoutesWebTest {
     inner class LlmChatRoutes {
 
         @Test
-        fun `POST llm chat returns 200 OK with valid ChatResponse JSON`() = runWebTest {
+        fun `POST llm chat returns 200 OK with valid ChatResponse JSON containing sessionId`() = runWebTest {
             val client = createClient {
                 install(ContentNegotiation) { json() }
             }
 
+            val request = ChatRequest("session-web-1", "How do I optimize DB performance?")
             val response = client.post("/llm/chat") {
                 contentType(ContentType.Application.Json)
-                setBody(ChatRequest("session-web-1", "How do I optimize DB performance?"))
+                setBody(request)
             }
 
             response.status shouldBe HttpStatusCode.OK
             response.contentType()?.contentType shouldBe ContentType.Application.Json.contentType
 
             val body = response.body<ChatResponse>()
+            body.sessionId shouldBe "session-web-1"
+            body.reply shouldContain "Mocked LLM Response"
+        }
+
+        @Test
+        fun `POST llm chat generates valid random UUID sessionId when omitted from request payload`() = runWebTest {
+            val client = createClient {
+                install(ContentNegotiation) { json() }
+            }
+
+            val response = client.post("/llm/chat") {
+                contentType(ContentType.Application.Json)
+                setBody("""{ "message": "Test prompt without sessionId" }""")
+            }
+
+            response.status shouldBe HttpStatusCode.OK
+            val body = response.body<ChatResponse>()
+            body.sessionId.shouldNotBeBlank()
+            assertDoesNotThrow { UUID.fromString(body.sessionId) }
             body.reply shouldContain "Mocked LLM Response"
         }
 
@@ -216,18 +207,38 @@ class RoutesWebTest {
     inner class AgentRoutes {
 
         @Test
-        fun `POST agent chat returns 200 OK with valid ChatResponse JSON`() = runWebTest {
+        fun `POST agent chat returns 200 OK with valid ChatResponse JSON containing sessionId`() = runWebTest {
+            val client = createClient {
+                install(ContentNegotiation) { json() }
+            }
+
+            val request = ChatRequest("session-agent-1", "What tools are available?")
+            val response = client.post("/agent/chat") {
+                contentType(ContentType.Application.Json)
+                setBody(request)
+            }
+
+            response.status shouldBe HttpStatusCode.OK
+            val body = response.body<ChatResponse>()
+            body.sessionId shouldBe "session-agent-1"
+            body.reply shouldContain "Mocked LLM Response"
+        }
+
+        @Test
+        fun `POST agent chat generates valid random UUID sessionId when omitted from request payload`() = runWebTest {
             val client = createClient {
                 install(ContentNegotiation) { json() }
             }
 
             val response = client.post("/agent/chat") {
                 contentType(ContentType.Application.Json)
-                setBody(ChatRequest("session-agent-1", "What tools are available?"))
+                setBody("""{ "message": "Test agent prompt without sessionId" }""")
             }
 
             response.status shouldBe HttpStatusCode.OK
             val body = response.body<ChatResponse>()
+            body.sessionId.shouldNotBeBlank()
+            assertDoesNotThrow { UUID.fromString(body.sessionId) }
             body.reply shouldContain "Mocked LLM Response"
         }
 
@@ -255,18 +266,38 @@ class RoutesWebTest {
     inner class OptimizerRoutes {
 
         @Test
-        fun `POST optimizer database returns 200 OK with optimization response`() = runWebTest {
+        fun `POST optimizer database returns 200 OK with optimization response containing sessionId`() = runWebTest {
+            val client = createClient {
+                install(ContentNegotiation) { json() }
+            }
+
+            val request = ChatRequest("session-opt-1", "SELECT * FROM users WHERE email = 'test@example.com'")
+            val response = client.post("/optimizer/database") {
+                contentType(ContentType.Application.Json)
+                setBody(request)
+            }
+
+            response.status shouldBe HttpStatusCode.OK
+            val body = response.body<ChatResponse>()
+            body.sessionId shouldBe "session-opt-1"
+            body.reply shouldContain "CREATE INDEX"
+        }
+
+        @Test
+        fun `POST optimizer database generates valid random UUID sessionId when omitted from request payload`() = runWebTest {
             val client = createClient {
                 install(ContentNegotiation) { json() }
             }
 
             val response = client.post("/optimizer/database") {
                 contentType(ContentType.Application.Json)
-                setBody(ChatRequest("session-opt-1", "SELECT * FROM users WHERE email = 'test@example.com'"))
+                setBody("""{ "message": "SELECT * FROM users" }""")
             }
 
             response.status shouldBe HttpStatusCode.OK
             val body = response.body<ChatResponse>()
+            body.sessionId.shouldNotBeBlank()
+            assertDoesNotThrow { UUID.fromString(body.sessionId) }
             body.reply shouldContain "CREATE INDEX"
         }
 

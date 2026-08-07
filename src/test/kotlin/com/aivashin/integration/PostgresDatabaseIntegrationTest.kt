@@ -13,7 +13,7 @@ class PostgresDatabaseIntegrationTest : AbstractPostgresIntegrationTest() {
 
     @Test
     fun `ListDatabaseTablesTool lists all seeded user tables in database`() = runTest {
-        val tool = ListDatabaseTablesTool(dataSource)
+        val tool = ListDatabaseTablesTool(connectionFactory)
         val result = tool.execute(Unit)
 
         val tableList = result.split(", ").map { it.trim() }
@@ -22,7 +22,7 @@ class PostgresDatabaseIntegrationTest : AbstractPostgresIntegrationTest() {
 
     @Test
     fun `GetTableSchemaTool inspects users table column definitions`() = runTest {
-        val tool = GetTableSchemaTool(dataSource)
+        val tool = GetTableSchemaTool(connectionFactory)
         val schema = tool.execute(GetTableSchemaTool.Args("users"))
 
         schema shouldContain "id:"
@@ -34,7 +34,7 @@ class PostgresDatabaseIntegrationTest : AbstractPostgresIntegrationTest() {
 
     @Test
     fun `GetTableSchemaTool inspects products table column definitions`() = runTest {
-        val tool = GetTableSchemaTool(dataSource)
+        val tool = GetTableSchemaTool(connectionFactory)
         val schema = tool.execute(GetTableSchemaTool.Args("products"))
 
         schema shouldContain "id:"
@@ -46,7 +46,7 @@ class PostgresDatabaseIntegrationTest : AbstractPostgresIntegrationTest() {
 
     @Test
     fun `GetTableSchemaTool inspects orders table column definitions`() = runTest {
-        val tool = GetTableSchemaTool(dataSource)
+        val tool = GetTableSchemaTool(connectionFactory)
         val schema = tool.execute(GetTableSchemaTool.Args("orders"))
 
         schema shouldContain "id:"
@@ -58,7 +58,7 @@ class PostgresDatabaseIntegrationTest : AbstractPostgresIntegrationTest() {
 
     @Test
     fun `GetTableSchemaTool inspects order_items table column definitions`() = runTest {
-        val tool = GetTableSchemaTool(dataSource)
+        val tool = GetTableSchemaTool(connectionFactory)
         val schema = tool.execute(GetTableSchemaTool.Args("order_items"))
 
         schema shouldContain "id:"
@@ -70,7 +70,7 @@ class PostgresDatabaseIntegrationTest : AbstractPostgresIntegrationTest() {
 
     @Test
     fun `GetTableSchemaTool returns fallback message when table does not exist`() = runTest {
-        val tool = GetTableSchemaTool(dataSource)
+        val tool = GetTableSchemaTool(connectionFactory)
         val result = tool.execute(GetTableSchemaTool.Args("non_existing_table"))
 
         result shouldBe "Table 'non_existing_table' not found or contains no columns."
@@ -100,7 +100,7 @@ class PostgresDatabaseIntegrationTest : AbstractPostgresIntegrationTest() {
         val provider = PostgresJdbcChatHistoryProvider(dataSource, "integration_chat_history")
         provider.migrate()
 
-        val tool = ListDatabaseTablesTool(dataSource)
+        val tool = ListDatabaseTablesTool(connectionFactory)
         val tables = tool.execute(Unit)
         tables shouldContain "integration_chat_history"
     }

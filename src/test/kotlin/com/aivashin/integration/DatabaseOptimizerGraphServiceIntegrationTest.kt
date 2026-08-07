@@ -41,8 +41,8 @@ class DatabaseOptimizerGraphServiceIntegrationTest : AbstractPostgresIntegration
     @BeforeEach
     fun setUp() {
         toolRegistry = ToolRegistry {
-            tool(ListDatabaseTablesTool(dataSource))
-            tool(GetTableSchemaTool(dataSource))
+            tool(ListDatabaseTablesTool(connectionFactory))
+            tool(GetTableSchemaTool(connectionFactory))
         }
     }
 

@@ -9,6 +9,8 @@ postgresql = "42.7.10"
 hikari = "6.2.1"
 postgresql-r2dbc = "1.1.2.RELEASE"
 r2dbc-pool = "1.0.2.RELEASE"
+h2 = "2.3.232"
+r2dbc-h2 = "1.0.0.RELEASE"
 opentelemetry = "1.61.0"
 mockk = "1.14.11"
 kotest = "6.2.2"
@@ -36,6 +38,8 @@ postgresql = { module = "org.postgresql:postgresql", version.ref = "postgresql" 
 hikari = { module = "com.zaxxer:HikariCP", version.ref = "hikari" }
 postgresql-r2dbc = { module = "org.postgresql:r2dbc-postgresql", version.ref = "postgresql-r2dbc" }
 r2dbc-pool = { module = "io.r2dbc:r2dbc-pool", version.ref = "r2dbc-pool" }
+h2 = { module = "com.h2database:h2", version.ref = "h2" }
+r2dbc-h2 = { module = "io.r2dbc:r2dbc-h2", version.ref = "r2dbc-h2" }
 
 # Telemetry
 opentelemetry-exporter-logging = { module = "io.opentelemetry:opentelemetry-exporter-logging", version.ref = "opentelemetry" }
@@ -50,4 +54,3 @@ testcontainers-junit-jupiter = { module = "org.testcontainers:testcontainers-jun
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-

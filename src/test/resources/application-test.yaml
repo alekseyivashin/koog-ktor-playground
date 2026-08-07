@@ -2,17 +2,18 @@ service:
   name: ktor-koog-playground-test
   version: 0.0.1-test
 
-ktor:
-  deployment:
-    port: 8080
-  application:
-    modules:
-      - com.aivashin.configuration.AgentModuleKt.agentModule
-
 database:
-  url: jdbc:h2:mem:webfacingtest;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH
-  user: sa
-  password: ""
+  host: localhost
+  port: 5432
+  name: testdb
+  user: postgres
+  password: postgres
+  jdbcPool:
+    minIdleSize: 0
+    maxPoolSize: 5
+  r2dbcPool:
+    minIdleSize: 0
+    maxPoolSize: 5
 
 agents:
   api:
