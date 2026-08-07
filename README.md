@@ -7,38 +7,39 @@
 [![Kotlin](https://img.shields.io/badge/Kotlin-2.4.10-blueviolet.svg?style=for-the-badge&logo=kotlin)](https://kotlinlang.org/)
 [![Ktor](https://img.shields.io/badge/Ktor-3.5.2-orange.svg?style=for-the-badge&logo=ktor)](https://ktor.io/)
 [![JetBrains Koog](https://img.shields.io/badge/Koog-1.1.1-000000.svg?style=for-the-badge&logo=jetbrains)](https://github.com/JetBrains/koog)
-[![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED.svg?style=for-the-badge&logo=docker)](https://www.docker.com/)
-[![OpenTelemetry](https://img.shields.io/badge/OpenTelemetry-Tracing-7A0099.svg?style=for-the-badge&logo=opentelemetry)](https://opentelemetry.io/)
+[![OpenTelemetry](https://img.shields.io/badge/Jaeger-7A0099.svg?style=for-the-badge&logo=opentelemetry)](https://www.jaegertracing.io/)
 
 ---
 
-*Explore low-level LLM execution, SSE streaming, autonomous AI agents with chat memory, and self-correcting graph state-machines integrated directly into Ktor.*
+*Explore low-level LLM execution, SSE streaming, autonomous AI agents with chat memory, reactive R2DBC database introspection, and self-correcting graph state-machines integrated directly into Ktor.*
 
 </div>
 
----
-
-## 📋 Table of Contents
-
-- [Overview](#-overview)
-- [Key Features](#-key-features)
-- [System Architecture & Graph Pipeline](#-system-architecture--graph-pipeline)
-- [Getting Started](#-getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Environment Setup](#environment-setup)
-  - [Spin Up Infrastructure](#spin-up-infrastructure)
-  - [Building & Running](#building--running)
-- [API Documentation](#-api-documentation)
-- [Testing & Quality Assurance](#-testing--quality-assurance)
-- [Observability & Tracing](#-observability--tracing)
-- [Project Structure](#-project-structure)
-- [Bruno API Collection](#-bruno-api-collection)
-
----
+<!-- TOC -->
+* [🚀 Ktor Koog Playground](#-ktor-koog-playground)
+  * [🌟 Overview](#-overview)
+  * [✨ Key Features](#-key-features)
+  * [🏗️ System Architecture & Graph Pipeline](#-system-architecture--graph-pipeline)
+  * [🚀 Getting Started](#-getting-started)
+    * [Prerequisites](#prerequisites)
+    * [Environment Setup](#environment-setup)
+    * [Spin Up Infrastructure](#spin-up-infrastructure)
+    * [Building & Running](#building--running)
+  * [📡 API Documentation](#-api-documentation)
+    * [1. Simple LLM Chat](#1-simple-llm-chat)
+    * [2. LLM Server-Sent Events (SSE) Streaming](#2-llm-server-sent-events-sse-streaming)
+    * [3. High-Level AI Agent Chat](#3-high-level-ai-agent-chat)
+    * [4. Database Optimization Engine](#4-database-optimization-engine)
+  * [🧪 Testing & Quality Assurance](#-testing--quality-assurance)
+    * [Test Suites Architecture](#test-suites-architecture)
+  * [📊 Observability & Tracing](#-observability--tracing)
+  * [📂 Project Structure](#-project-structure)
+  * [🧰 Bruno API Collection](#-bruno-api-collection)
+<!-- TOC -->
 
 ## 🌟 Overview
 
-**ktor-koog-playground** is a production-grade Kotlin reference architecture built on **Ktor 3.x** and **JetBrains Koog AI Framework**. It demonstrates how to build resilient, multi-agent AI systems backed by real-time database introspection, automated security guardrails, external web research, and distributed OpenTelemetry tracing.
+**ktor-koog-playground** is a production-grade Kotlin reference architecture built on **Ktor 3.x** and **JetBrains Koog AI Framework**. It demonstrates how to build resilient, multi-agent AI systems backed by reactive R2DBC database introspection, automated security guardrails, external web research, and distributed OpenTelemetry tracing.
 
 Whether you're exploring direct LLM execution via prompt DSLs, Server-Sent Events (SSE) streaming, or building self-correcting graph pipelines, this project provides a comprehensive template.
 
@@ -51,9 +52,10 @@ Whether you're exploring direct LLM execution via prompt DSLs, Server-Sent Event
 | 🤖 **JetBrains Koog AI Integration** | `ai.koog:agents` | Deep integration with Koog `LLMClient`, `AIAgent`, `ToolRegistry`, and `ChatMemory`. |
 | ⚡ **Reactive Ktor 3.x Backend** | Ktor + Netty | Asynchronous REST backend featuring ContentNegotiation (JSON) and Ktor Dependency Injection. |
 | 🔄 **SSE Event Streaming** | `Flow<StreamFrame>` | Real-time token-by-token text streaming over HTTP SSE via `/llm/chat/stream`. |
+| ⚡ **Reactive R2DBC Tools** | `r2dbc-pool` + Kotlin Coroutines | Non-blocking database table & schema introspection using R2DBC drivers and coroutines `Flow`. |
 | 📊 **Autonomous DB Optimizer Pipeline** | `optimizerStrategy` | Multi-node state-machine graph (`SecurityGuard` ➔ `QueryAnalyzer` ➔ `ContextAggregator` ➔ `SolutionArchitect` ➔ `SelfReflection` audit loop). |
 | 🛡️ **Built-in Security Guardrails** | `securityGuardNode` | Automatic detection and rejection of SQL injections or destructive operations (`DROP`, `DELETE`, `ALTER`, `TRUNCATE`). |
-| 🔍 **Parallel Context Aggregation** | Kotlin Coroutines | Concurrent fetching of live PostgreSQL table schemas via JDBC and Tavily web research. |
+| 🔍 **Parallel Context Aggregation** | Kotlin Coroutines | Concurrent fetching of live PostgreSQL table schemas via R2DBC and Tavily web research. |
 | 📈 **Observability & Tracing** | OpenTelemetry + Jaeger | Complete execution trajectory tracing across agents, prompt executions, and tool calls. |
 | 🧪 **Enterprise Test Suite** | JUnit 5 + Testcontainers | Comprehensive test suite including unit tests, isolated Ktor `testApplication` web tests, and PostgreSQL integration tests. |
 
@@ -61,7 +63,7 @@ Whether you're exploring direct LLM execution via prompt DSLs, Server-Sent Event
 
 ## 🏗️ System Architecture & Graph Pipeline
 
-The **Database Optimizer Engine** operates as an autonomous state-machine pipeline that analyzes SQL queries, inspects the live database schema, researches best practices on the web, generates optimized SQL, and audits the results for safety.
+The **Database Optimizer Engine** operates as an autonomous state-machine pipeline that analyzes SQL queries, inspects the live database schema via non-blocking R2DBC queries, researches best practices on the web, generates optimized SQL, and audits the results for safety.
 
 ```mermaid
 graph TD
@@ -74,7 +76,7 @@ graph TD
     Analyzer --> Aggregator[contextAggregatorNode]
     
     subgraph Parallel Aggregation
-        Aggregator --> Tool1[GetTableSchemaTool - JDBC Schema]
+        Aggregator --> Tool1[GetTableSchemaTool - R2DBC Schema]
         Aggregator --> Tool2[Tavily Search Tool - Postgres Best Practices]
     end
     
@@ -101,7 +103,7 @@ Ensure you have the following installed on your local machine:
 
 ### Environment Setup
 
-Create a `.env` file in the root directory (or use environment variables):
+Create a `.env` file in the root directory (or set environment variables):
 
 ```bash
 # .env
@@ -138,6 +140,8 @@ INFO Application - Responding at http://0.0.0.0:8080
 
 ## 📡 API Documentation
 
+> 💡 **Note**: `sessionId` is optional in request bodies. If omitted, the server automatically generates a unique UUID string for the session.
+
 ### 1. Simple LLM Chat
 
 Sends a message to the Google Gemini LLM using Koog's low-level execution client and manual tool resolution.
@@ -156,6 +160,7 @@ Sends a message to the Google Gemini LLM using Koog's low-level execution client
 **Response**:
 ```json
 {
+  "sessionId": "session-101",
   "reply": "The database contains the following tables: users, orders, products."
 }
 ```
@@ -201,6 +206,14 @@ Interacts with a stateful `AIAgent` equipped with conversation memory (`ChatMemo
 }
 ```
 
+**Response**:
+```json
+{
+  "sessionId": "session-103",
+  "reply": "The `users` table schema: id (UUID), email (VARCHAR), created_at (TIMESTAMP)."
+}
+```
+
 ---
 
 ### 4. Database Optimization Engine
@@ -213,7 +226,6 @@ Runs the multi-node state-machine graph pipeline to audit, research, and optimiz
 **Request**:
 ```json
 {
-  "sessionId": "session-104",
   "message": "SELECT * FROM users WHERE email = 'test@example.com' ORDER BY created_at DESC"
 }
 ```
@@ -221,6 +233,7 @@ Runs the multi-node state-machine graph pipeline to audit, research, and optimiz
 **Response Example**:
 ```json
 {
+  "sessionId": "b8f5a1c2-3e4f-4a5b-9c8d-7e6f5a4b3c2d",
   "reply": "### Verification Status: SUCCESS (Verified after 1 iterations)\n\n### Optimized SQL:\n```sql\nCREATE INDEX idx_users_email_created_at ON users (email, created_at DESC);\n```\n\n### Technical Explanation:\nCreating a composite index on (email, created_at DESC) eliminates sequential table scans and avoids an explicit sort step."
 }
 ```
@@ -239,12 +252,13 @@ The codebase includes comprehensive unit, web, and integration test coverage:
 ### Test Suites Architecture
 
 1. **Unit Tests (`com.aivashin.unit.*`)**:
-   - `DatabaseToolsUnitTest`: Verifies schema introspection tools.
+   - `DatabaseToolsUnitTest`: Verifies R2DBC schema introspection tools.
    - `LLMChatServiceUnitTest`: Validates LLM service behavior.
    - `InMemoryChatHistoryRepositoryTest`: Tests conversation persistence.
 2. **Web Tests (`com.aivashin.web.RoutesWebTest`)**:
    - Tests all HTTP endpoints using Ktor's `testApplication` engine.
-   - Uses `application-test.yaml` and MockK constructor mocking (`mockkConstructor(GoogleLLMClient::class)`).
+   - Mocks Ktor services in Ktor DI (`provide<LLMChatService>`, etc.).
+   - Verifies auto-generation of UUID session IDs when omitted from requests.
    - **Runs rapidly without requiring external databases or Docker containers.**
 3. **Integration Tests (`com.aivashin.integration.*`)**:
    - `PostgresDatabaseIntegrationTest` & `DatabaseOptimizerGraphServiceIntegrationTest`.
@@ -280,7 +294,8 @@ ktor-koog-playground/
 │   │   │   ├── repository/                 # Chat history persistence layer
 │   │   │   ├── routing/                    # Ktor HTTP Routing controllers
 │   │   │   ├── service/                    # LLM, AIAgent, & Graph Optimizer services
-│   │   │   └── tool/                       # JDBC Database Introspection tools
+│   │   │   ├── tool/                       # R2DBC Reactive Database Introspection tools
+│   │   │   └── util/                       # Coroutine ConnectionFactory extensions
 │   │   └── resources/                      # application.yaml & logback.xml
 │   └── test/
 │       └── kotlin/com/aivashin/
@@ -304,6 +319,6 @@ A ready-to-use **Bruno API collection** is included in the `bruno/` directory:
 
 <div align="center">
 
-Crafted with ❤️ using **Kotlin**, **Ktor**, and **JetBrains Koog AI**.
+Crafted with ❤️ using **Kotlin**, **Ktor**, **R2DBC**, and **JetBrains Koog AI**.
 
 </div>
