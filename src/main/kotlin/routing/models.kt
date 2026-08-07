@@ -10,4 +10,7 @@ data class ChatRequest(
 )
 
 @Serializable
-data class ChatResponse(val reply: String)
+data class ChatResponse(
+    val sessionId: String,
+    val reply: String
+)

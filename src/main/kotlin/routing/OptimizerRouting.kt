@@ -18,7 +18,7 @@ fun Application.optimizerRouting() {
             post("/database") {
                 val request = call.receive<ChatRequest>()
                 val reply = databaseOptimizerGraphService.runOptimization(request.message, request.sessionId)
-                call.respond(ChatResponse(reply))
+                call.respond(ChatResponse(request.sessionId, reply))
             }
         }
     }

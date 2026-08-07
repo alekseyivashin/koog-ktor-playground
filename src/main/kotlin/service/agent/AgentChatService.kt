@@ -8,8 +8,8 @@ import ai.koog.agents.features.eventHandler.feature.handleEvents
 import ai.koog.prompt.executor.clients.google.GoogleModels
 import ai.koog.prompt.executor.llms.all.simpleGoogleAIExecutor
 import ai.koog.prompt.message.Message
-import com.aivashin.configuration.dependency.COMMON_TOOL_REGISTRY_NAME
 import com.aivashin.configuration.dependency.DatabaseDependencies.AGENT_CHAT_HISTORY_PROVIDER_NAME
+import com.aivashin.configuration.dependency.ToolsDependencies.COMMON_TOOL_REGISTRY_NAME
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.server.plugins.di.annotations.Named
 import io.ktor.server.plugins.di.annotations.Property

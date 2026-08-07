@@ -1,11 +1,14 @@
 [versions]
 kotlin = "2.4.10"
+coroutines = "1.11.0"
 logback = "1.5.34"
 kotlin-logging = "8.0.4"
 koog = "1.1.1"
 koog-beta = "1.1.1-beta"
 postgresql = "42.7.10"
 hikari = "6.2.1"
+postgresql-r2dbc = "1.1.2.RELEASE"
+r2dbc-pool = "1.0.2.RELEASE"
 opentelemetry = "1.61.0"
 mockk = "1.14.11"
 kotest = "6.2.2"
@@ -15,6 +18,10 @@ testcontainers = "2.0.5"
 # Logs
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 kotlin-logging = { module = "io.github.oshai:kotlin-logging-jvm", version.ref = "kotlin-logging" }
+
+# Coroutines
+kotlinx-coroutines-bom = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-bom", version.ref = "coroutines" }
+kotlinx-coroutines-reactor = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-reactor" }
 
 # Koog
 koog-agents = { module = "ai.koog:koog-agents", version.ref = "koog" }
@@ -27,6 +34,8 @@ koog-agents-test = { module = "ai.koog:agents-test", version.ref = "koog" }
 # DB
 postgresql = { module = "org.postgresql:postgresql", version.ref = "postgresql" }
 hikari = { module = "com.zaxxer:HikariCP", version.ref = "hikari" }
+postgresql-r2dbc = { module = "org.postgresql:r2dbc-postgresql", version.ref = "postgresql-r2dbc" }
+r2dbc-pool = { module = "io.r2dbc:r2dbc-pool", version.ref = "r2dbc-pool" }
 
 # Telemetry
 opentelemetry-exporter-logging = { module = "io.opentelemetry:opentelemetry-exporter-logging", version.ref = "opentelemetry" }

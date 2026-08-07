@@ -3,11 +3,18 @@ package com.aivashin.tool
 import ai.koog.agents.core.tools.SimpleTool
 import ai.koog.agents.core.tools.annotations.LLMDescription
 import ai.koog.serialization.typeToken
+import com.aivashin.util.withConnection
+import io.r2dbc.spi.ConnectionFactory
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.reactive.asFlow
+import kotlinx.coroutines.reactive.awaitSingle
 import kotlinx.serialization.Serializable
 import javax.sql.DataSource
 
 
-class ListDatabaseTablesTool(private val dataSource: DataSource) : SimpleTool<Unit>(
+class ListDatabaseTablesTool(private val connectionFactory: ConnectionFactory) : SimpleTool<Unit>(
     argsType = typeToken<Unit>(),
     name = "list_database_tables",
     description = "Lists all user tables available in the public schema of the database."
@@ -22,19 +29,22 @@ class ListDatabaseTablesTool(private val dataSource: DataSource) : SimpleTool<Un
     }
 
     override suspend fun execute(args: Unit): String {
-        dataSource.connection.use { conn ->
-            conn.prepareStatement(QUERY).executeQuery().use { rs ->
-                val tables = mutableListOf<String>()
-                while (rs.next()) {
-                    tables.add(rs.getString("table_name"))
-                }
-                return tables.joinToString(", ").ifEmpty { "No tables found in the public schema." }
-            }
+        return connectionFactory.withConnection { conn ->
+            conn.createStatement(QUERY)
+                .execute()
+                .awaitSingle()
+                .map { row, _ ->
+                    row.get("table_name", String::class.java)
+                }.asFlow()
+                .filterNotNull()
+                .toList()
+                .joinToString(", ")
+                .ifEmpty { "No tables found in the public schema." }
         }
     }
 }
 
-class GetTableSchemaTool(private val dataSource: DataSource) : SimpleTool<GetTableSchemaTool.Args>(
+class GetTableSchemaTool(private val connectionFactory: ConnectionFactory) : SimpleTool<GetTableSchemaTool.Args>(
     argsType = typeToken<Args>(),
     name = "get_table_schema",
     description = "Retrieves the column definitions, data types, and nullability for a specific table."
@@ -44,7 +54,7 @@ class GetTableSchemaTool(private val dataSource: DataSource) : SimpleTool<GetTab
         private val QUERY = """
                 SELECT column_name, data_type, is_nullable 
                 FROM information_schema.columns 
-                WHERE table_schema = 'public' AND table_name = ?
+                WHERE table_schema = 'public' AND table_name = $1
                 ORDER BY ordinal_position
             """.trimIndent()
     }
@@ -56,20 +66,21 @@ class GetTableSchemaTool(private val dataSource: DataSource) : SimpleTool<GetTab
     )
 
     override suspend fun execute(args: Args): String {
-        dataSource.connection.use { conn ->
-            conn.prepareStatement(QUERY).use { stmt ->
-                stmt.setString(1, args.tableName)
-                stmt.executeQuery().use { rs ->
-                    val schemaDetails = mutableListOf<String>()
-                    while (rs.next()) {
-                        val columnName = rs.getString("column_name")
-                        val dataType = rs.getString("data_type")
-                        val isNullable = rs.getString("is_nullable")
-                        schemaDetails.add("$columnName: $dataType (Nullable: $isNullable)")
-                    }
-                    return schemaDetails.joinToString("\n").ifEmpty { "Table '${args.tableName}' not found or contains no columns." }
-                }
-            }
+        return connectionFactory.withConnection { conn ->
+            conn.createStatement(QUERY)
+                .bind("$1", args.tableName)
+                .execute()
+                .awaitSingle()
+                .map { row, _ ->
+
+                    val columnName = row.get("column_name", String::class.java)
+                    val dataType = row.get("data_type", String::class.java)
+                    val isNullable = row.get("is_nullable", String::class.java)
+                    "$columnName: $dataType (Nullable: $isNullable)"
+                }.asFlow()
+                .toList()
+                .joinToString("\n")
+                .ifEmpty { "Table '${args.tableName}' not found or contains no columns." }
         }
     }
 }

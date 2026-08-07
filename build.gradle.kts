@@ -15,6 +15,9 @@ kotlin {
     jvmToolchain(21)
 }
 dependencies {
+    implementation(platform(libs.kotlinx.coroutines.bom))
+    implementation(libs.kotlinx.coroutines.reactor)
+
     implementation(ktorLibs.server.config.yaml)
     implementation(ktorLibs.server.core)
     implementation(ktorLibs.server.netty)
@@ -30,6 +33,8 @@ dependencies {
     implementation(libs.koog.agents.features.chat.memory.jdbc)
     implementation(libs.postgresql)
     implementation(libs.hikari)
+    implementation(libs.postgresql.r2dbc)
+    implementation(libs.r2dbc.pool)
     implementation(libs.opentelemetry.exporter.logging)
     implementation(libs.opentelemetry.exporter.otlp)
 

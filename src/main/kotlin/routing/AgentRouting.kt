@@ -23,7 +23,7 @@ fun Application.agentRouting() {
             post("/chat") {
                 val request = call.receive<ChatRequest>()
                 val reply = llmChatService.askLLM(request.sessionId, request.message)
-                call.respond(ChatResponse(reply))
+                call.respond(ChatResponse(request.sessionId, reply))
             }
 
             post("/chat/stream") {
@@ -42,7 +42,7 @@ fun Application.agentRouting() {
             post("/chat") {
                 val request = call.receive<ChatRequest>()
                 val reply = agentChatService.askAgent(request.sessionId, request.message)
-                call.respond(ChatResponse(reply))
+                call.respond(ChatResponse(request.sessionId, reply))
             }
         }
     }

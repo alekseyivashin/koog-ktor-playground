@@ -10,9 +10,17 @@ ktor:
       - com.aivashin.configuration.AgentModuleKt.agentModule
 
 database:
-  url: jdbc:postgresql://localhost:5432/ktor-koog-playground
+  host: localhost
+  port: 5432
+  name: ktor-koog-playground
   user: postgres
   password: postgres
+  jdbcPool:
+    minIdleSize: 1
+    maxPoolSize: 10
+  r2dbcPool:
+    minIdleSize: 1
+    maxPoolSize: 10
 
 agents:
   api:

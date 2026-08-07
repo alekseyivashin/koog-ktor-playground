@@ -3,10 +3,12 @@ package com.aivashin.configuration.dependency
 import ai.koog.agents.core.tools.ToolRegistry
 import ai.koog.agents.mcp.McpToolRegistryProvider
 import ai.koog.agents.mcp.fromProcess
+import com.aivashin.configuration.dependency.ToolsDependencies.COMMON_TOOL_REGISTRY_NAME
 import com.aivashin.tool.GetTableSchemaTool
 import com.aivashin.tool.ListDatabaseTablesTool
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.server.plugins.di.DependencyRegistry
+import io.r2dbc.spi.ConnectionFactory
 import javax.sql.DataSource
 
 object ToolsDependencies {
@@ -20,8 +22,8 @@ fun DependencyRegistry.toolsDependencies() {
     val localToolRegistryName = "localToolRegistry"
     val mcpToolRegistryName = "mcpToolRegistry"
 
-    provide<ListDatabaseTablesTool> { ListDatabaseTablesTool(resolve<DataSource>()) }
-    provide<GetTableSchemaTool> { GetTableSchemaTool(resolve<DataSource>()) }
+    provide<ListDatabaseTablesTool> { ListDatabaseTablesTool(resolve<ConnectionFactory>()) }
+    provide<GetTableSchemaTool> { GetTableSchemaTool(resolve<ConnectionFactory>()) }
 
     provide(localToolRegistryName) {
         val tools = listOf(

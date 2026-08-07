@@ -12,8 +12,8 @@ import ai.koog.prompt.executor.clients.google.GoogleModels
 import ai.koog.prompt.executor.clients.retry.RetryConfig
 import ai.koog.prompt.executor.clients.retry.RetryingLLMClient
 import ai.koog.prompt.executor.model.PromptExecutor
-import com.aivashin.configuration.dependency.COMMON_TOOL_REGISTRY_NAME
 import com.aivashin.configuration.dependency.DatabaseDependencies.DATABASE_OPTIMIZER_HISTORY_PROVIDER_NAME
+import com.aivashin.configuration.dependency.ToolsDependencies.COMMON_TOOL_REGISTRY_NAME
 import com.aivashin.configuration.telemetry.TelemetryConfig
 import com.aivashin.model.graph.OptimizerState
 import io.github.oshai.kotlinlogging.KotlinLogging
