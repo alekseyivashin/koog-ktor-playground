@@ -1,0 +1,237 @@
+{
+  "bruno/bruno.json": {
+    "mtime": 1780954796.2807515,
+    "ast_hash": "fcf81be4f41d071b43a77b52ba87b83a",
+    "semantic_hash": "fcf81be4f41d071b43a77b52ba87b83a"
+  },
+  "build.gradle.kts": {
+    "mtime": 1786111066.2127838,
+    "ast_hash": "85fddeaa33d1711c309e4bc2ca3ac669",
+    "semantic_hash": "85fddeaa33d1711c309e4bc2ca3ac669"
+  },
+  "gradlew": {
+    "mtime": 1786112133.667512,
+    "ast_hash": "65578da0358a01f31a6a78dfcf47e2bf",
+    "semantic_hash": "65578da0358a01f31a6a78dfcf47e2bf"
+  },
+  "settings.gradle.kts": {
+    "mtime": 1786020411.268,
+    "ast_hash": "a3afa0f9a537c0973541776e7c1ac0ae",
+    "semantic_hash": "a3afa0f9a537c0973541776e7c1ac0ae"
+  },
+  "src/main/kotlin/configuration/AgentModule.kt": {
+    "mtime": 1783539674.7490778,
+    "ast_hash": "0e6b6cfc99acf2567b0d5efe372c9418",
+    "semantic_hash": "0e6b6cfc99acf2567b0d5efe372c9418"
+  },
+  "src/main/kotlin/configuration/dependency/AgentModuleDependencies.kt": {
+    "mtime": 1784237349.49,
+    "ast_hash": "bd3e02e3ee0c7b3524c34b56f6497287",
+    "semantic_hash": "bd3e02e3ee0c7b3524c34b56f6497287"
+  },
+  "src/main/kotlin/configuration/dependency/DatabaseDependencies.kt": {
+    "mtime": 1786104595.118,
+    "ast_hash": "b0dc5ebaf3cb9044a8b4ccf77a9559bb",
+    "semantic_hash": "b0dc5ebaf3cb9044a8b4ccf77a9559bb"
+  },
+  "src/main/kotlin/configuration/dependency/ToolsDependencies.kt": {
+    "mtime": 1786106160.379,
+    "ast_hash": "f560b6e722d55ba0c7d43ac695874844",
+    "semantic_hash": "f560b6e722d55ba0c7d43ac695874844"
+  },
+  "src/main/kotlin/configuration/dependency/Utils.kt": {
+    "mtime": 1781821407.733044,
+    "ast_hash": "154920d4289fe9a907f0e1416f155846",
+    "semantic_hash": "154920d4289fe9a907f0e1416f155846"
+  },
+  "src/main/kotlin/configuration/properties/ServiceProperties.kt": {
+    "mtime": 1784235872.786,
+    "ast_hash": "2d66f65ee3890f172719970697cb8280",
+    "semantic_hash": "2d66f65ee3890f172719970697cb8280"
+  },
+  "src/main/kotlin/configuration/telemetry/TelemetryConfig.kt": {
+    "mtime": 1785363785.531,
+    "ast_hash": "d72f22b97462e4eb7419dd70fcbe9bd7",
+    "semantic_hash": "d72f22b97462e4eb7419dd70fcbe9bd7"
+  },
+  "src/main/kotlin/main.kt": {
+    "mtime": 1780952359.7164402,
+    "ast_hash": "57323c8d18cc674c4a819dc4071731ea",
+    "semantic_hash": "57323c8d18cc674c4a819dc4071731ea"
+  },
+  "src/main/kotlin/model/ChatModels.kt": {
+    "mtime": 1781555754.4283726,
+    "ast_hash": "ba130c9483c563ed8ef05e697262370c",
+    "semantic_hash": "ba130c9483c563ed8ef05e697262370c"
+  },
+  "src/main/kotlin/model/graph/OptimizerNodes.kt": {
+    "mtime": 1785965671.7235713,
+    "ast_hash": "de842584aa2cf3e0a756ef1b28e26e3e",
+    "semantic_hash": "de842584aa2cf3e0a756ef1b28e26e3e"
+  },
+  "src/main/kotlin/model/graph/OptimizerState.kt": {
+    "mtime": 1786007378.4520354,
+    "ast_hash": "0b476701024dfb22f0a4b1a5894dc51f",
+    "semantic_hash": "0b476701024dfb22f0a4b1a5894dc51f"
+  },
+  "src/main/kotlin/model/graph/OptimizerStrategy.kt": {
+    "mtime": 1785966397.585,
+    "ast_hash": "4482590dbe77a12764247a4fc64d02c9",
+    "semantic_hash": "4482590dbe77a12764247a4fc64d02c9"
+  },
+  "src/main/kotlin/repository/ChatHistoryRepository.kt": {
+    "mtime": 1781119629.7316766,
+    "ast_hash": "1d80aa83baac4a3db253b8e64a64487c",
+    "semantic_hash": "1d80aa83baac4a3db253b8e64a64487c"
+  },
+  "src/main/kotlin/repository/InMemoryChatHistoryRepository.kt": {
+    "mtime": 1781119731.844135,
+    "ast_hash": "a67230d9d176059d0be7d4522fb807c6",
+    "semantic_hash": "a67230d9d176059d0be7d4522fb807c6"
+  },
+  "src/main/kotlin/routing/AgentRouting.kt": {
+    "mtime": 1786109652.281,
+    "ast_hash": "93155457e89ae1088e715c800d0644e2",
+    "semantic_hash": "93155457e89ae1088e715c800d0644e2"
+  },
+  "src/main/kotlin/routing/OptimizerRouting.kt": {
+    "mtime": 1786109652.265,
+    "ast_hash": "77d0e8c455245d60501d0719cdb9f5c3",
+    "semantic_hash": "77d0e8c455245d60501d0719cdb9f5c3"
+  },
+  "src/main/kotlin/routing/models.kt": {
+    "mtime": 1786109652.272,
+    "ast_hash": "79a285f191a4678eba5567fe900b1276",
+    "semantic_hash": "79a285f191a4678eba5567fe900b1276"
+  },
+  "src/main/kotlin/service/agent/AgentChatService.kt": {
+    "mtime": 1786025749.75,
+    "ast_hash": "6abd3e960b846962cb085d2955dbfbd5",
+    "semantic_hash": "6abd3e960b846962cb085d2955dbfbd5"
+  },
+  "src/main/kotlin/service/graph/DatabaseOptimizerGraphService.kt": {
+    "mtime": 1786025749.761,
+    "ast_hash": "c378330b25594ac61d5e9cf8144eae44",
+    "semantic_hash": "c378330b25594ac61d5e9cf8144eae44"
+  },
+  "src/main/kotlin/service/llm/LLMChatService.kt": {
+    "mtime": 1785965671.7257888,
+    "ast_hash": "6ecf869f2220007de4df04d93d8c0bf9",
+    "semantic_hash": "6ecf869f2220007de4df04d93d8c0bf9"
+  },
+  "src/main/kotlin/tool/DatabaseTools.kt": {
+    "mtime": 1786106508.1366975,
+    "ast_hash": "532426dd7055f03de499ccc2ecc07bac",
+    "semantic_hash": "532426dd7055f03de499ccc2ecc07bac"
+  },
+  "src/main/kotlin/util/DatabaseUtils.kt": {
+    "mtime": 1786105083.891,
+    "ast_hash": "b3266ba82291f1cf6addc40dfd23d9f3",
+    "semantic_hash": "b3266ba82291f1cf6addc40dfd23d9f3"
+  },
+  "src/test/kotlin/com/aivashin/integration/AbstractPostgresIntegrationTest.kt": {
+    "mtime": 1786110005.323645,
+    "ast_hash": "9229de9e4a0d45d092fb01aec4952192",
+    "semantic_hash": "9229de9e4a0d45d092fb01aec4952192"
+  },
+  "src/test/kotlin/com/aivashin/integration/DatabaseOptimizerGraphServiceIntegrationTest.kt": {
+    "mtime": 1786110008.2831402,
+    "ast_hash": "3dda121338c470d2dfafe1c05d65763f",
+    "semantic_hash": "3dda121338c470d2dfafe1c05d65763f"
+  },
+  "src/test/kotlin/com/aivashin/integration/PostgresDatabaseIntegrationTest.kt": {
+    "mtime": 1786110015.7643707,
+    "ast_hash": "33a77141fc5653c3e19886febbc12e7c",
+    "semantic_hash": "33a77141fc5653c3e19886febbc12e7c"
+  },
+  "src/test/kotlin/com/aivashin/unit/DatabaseToolsUnitTest.kt": {
+    "mtime": 1786110045.3069024,
+    "ast_hash": "619188b2e4c0b259f9311bf4bdd2788b",
+    "semantic_hash": "619188b2e4c0b259f9311bf4bdd2788b"
+  },
+  "src/test/kotlin/com/aivashin/unit/InMemoryChatHistoryRepositoryTest.kt": {
+    "mtime": 1785961276.928208,
+    "ast_hash": "da5e185f7213bbbcda3f9d578f2f7bad",
+    "semantic_hash": "da5e185f7213bbbcda3f9d578f2f7bad"
+  },
+  "src/test/kotlin/com/aivashin/unit/LLMChatServiceUnitTest.kt": {
+    "mtime": 1786005073.7665086,
+    "ast_hash": "9077ad0751722e6c3b792a1bd593c848",
+    "semantic_hash": "9077ad0751722e6c3b792a1bd593c848"
+  },
+  "src/test/kotlin/com/aivashin/web/RoutesWebTest.kt": {
+    "mtime": 1786110972.5906188,
+    "ast_hash": "4ab6f9f2eb17438b7bd1e862767c762f",
+    "semantic_hash": "4ab6f9f2eb17438b7bd1e862767c762f"
+  },
+  ".agents/skills/graphify/SKILL.md": {
+    "mtime": 1786112032.9236338,
+    "ast_hash": "dba74c369280d68f436b6d06c6dc5984",
+    "semantic_hash": "dba74c369280d68f436b6d06c6dc5984"
+  },
+  ".agents/skills/graphify/references/extraction-spec.md": {
+    "mtime": 1786111095.0,
+    "ast_hash": "42fef56a01698118f7fd722acdadea34",
+    "semantic_hash": "42fef56a01698118f7fd722acdadea34"
+  },
+  ".agents/skills/graphify/references/query.md": {
+    "mtime": 1786111095.0,
+    "ast_hash": "3c46f8ad006874260614ed8657d02307",
+    "semantic_hash": "3c46f8ad006874260614ed8657d02307"
+  },
+  "AGENTS.md": {
+    "mtime": 1786017109.813918,
+    "ast_hash": "03fabf90accbc4efa3d0ff1777c0f346",
+    "semantic_hash": "03fabf90accbc4efa3d0ff1777c0f346"
+  },
+  "README.md": {
+    "mtime": 1786021023.263,
+    "ast_hash": "186822c400aed3c428cfdb227be7c1e4",
+    "semantic_hash": "186822c400aed3c428cfdb227be7c1e4"
+  },
+  "docker-compose.yaml": {
+    "mtime": 1784233952.15,
+    "ast_hash": "940da0ccff01f1abec8c32bb34bd09a7",
+    "semantic_hash": "940da0ccff01f1abec8c32bb34bd09a7"
+  },
+  ".agents/skills/graphify/references/add-watch.md": {
+    "mtime": 1786111095.0,
+    "ast_hash": "d59d027fe449f06aa03905a01184e779",
+    "semantic_hash": "d59d027fe449f06aa03905a01184e779"
+  },
+  ".agents/skills/graphify/references/exports.md": {
+    "mtime": 1786111095.0,
+    "ast_hash": "9da2a2152e60a22f07f05fed5158f287",
+    "semantic_hash": "9da2a2152e60a22f07f05fed5158f287"
+  },
+  ".agents/skills/graphify/references/github-and-merge.md": {
+    "mtime": 1786111095.0,
+    "ast_hash": "cde13df085e4c492aeb7ba298a996d0d",
+    "semantic_hash": "cde13df085e4c492aeb7ba298a996d0d"
+  },
+  ".agents/skills/graphify/references/hooks.md": {
+    "mtime": 1786111095.0,
+    "ast_hash": "aea24fe86e18fe8aeb304403032cfce7",
+    "semantic_hash": "aea24fe86e18fe8aeb304403032cfce7"
+  },
+  ".agents/skills/graphify/references/transcribe.md": {
+    "mtime": 1786111095.0,
+    "ast_hash": "67b6a5fa6c0974e18f60db9f8932fbd8",
+    "semantic_hash": "67b6a5fa6c0974e18f60db9f8932fbd8"
+  },
+  ".agents/skills/graphify/references/update.md": {
+    "mtime": 1786111095.0,
+    "ast_hash": "9378bd03d56baaf78bd738ab3848f142",
+    "semantic_hash": "9378bd03d56baaf78bd738ab3848f142"
+  },
+  "src/main/resources/application.yaml": {
+    "mtime": 1786104297.671,
+    "ast_hash": "92acb8968b564d0c992224ef45b6c0f6",
+    "semantic_hash": "92acb8968b564d0c992224ef45b6c0f6"
+  },
+  "src/test/resources/application-test.yaml": {
+    "mtime": 1786110192.4297616,
+    "ast_hash": "07b329eda2deb22102aa7006564295d2",
+    "semantic_hash": "07b329eda2deb22102aa7006564295d2"
+  }
+}
